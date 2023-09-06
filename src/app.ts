@@ -1,16 +1,14 @@
-import { NotificationType, PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { Post, User } from './models.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-const user = await prisma.user.create({
-    data: {
-        email: 'e@email.com',
-        name: 'devin stevens',
-        username: 'eevinstevens',
-        notificationSettings: [
-            NotificationType.SECURITY,
-            NotificationType.MARKETING,
-        ],
-    },
-});
+dotenv.config();
 
-console.log(user);
+const connectionString = process.env.MONGO_URL!;
+mongoose.connect(connectionString);
+
+const posts = await Post.find().exec();
+
+console.log(posts);
+
+mongoose.connection.close();

@@ -6,16 +6,25 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+type Address {
+  street  String
+  city    String
+  state   String
+  country String
+  zipCode String
 }
 
 model User {
-  id                   Int                @id @default(autoincrement()) @map("user_id")
+  id                   String             @id @default(auto()) @map("_id") @db.ObjectId
   email                String             @unique
   username             String             @unique
   name                 String
   verified             Boolean            @default(false)
+  address              Address?
   posts                Post[]
   notificationSettings NotificationType[]
 
@@ -29,23 +38,15 @@ enum NotificationType {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement()) @map("post_id")
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   body      String
   published Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  userId    Int      @map("user_id")
+  userId    String   @db.ObjectId
   author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags      Tag[]    @relation("post_tags")
+  tags      String[]
 
   @@map("posts")
-}
-
-model Tag {
-  id    Int    @id @default(autoincrement()) @map("tag_id")
-  name  String
-  posts Post[] @relation("post_tags")
-
-  @@map("tags")
 }
