@@ -1,52 +1,28 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("MONGO_URL")
-}
-
-type Address {
-  street  String
-  city    String
-  state   String
-  country String
-  zipCode String
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id                   String             @id @default(auto()) @map("_id") @db.ObjectId
-  email                String             @unique
-  username             String             @unique
-  name                 String
-  verified             Boolean            @default(false)
-  address              Address?
-  posts                Post[]
-  notificationSettings NotificationType[]
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
 
-  @@map("users")
-}
-
-enum NotificationType {
-  SECURITY
-  MARKETING
-  COMMS
+  posts Post[]
 }
 
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        Int      @id @default(autoincrement())
   title     String
   body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
   published Boolean  @default(false)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  userId    String   @db.ObjectId
-  author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags      String[]
 
-  @@map("posts")
+  author User @relation(fields: [userId], references: [id])
 }
