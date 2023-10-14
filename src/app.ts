@@ -1,14 +1,13 @@
 import express from 'express';
 import usersRouter from './routes/users.js';
-import pug from 'pug';
+import logging from './middleware/logging.js';
 
 const app = express();
 const port = 3000;
 
-app.engine('pug', (pug as any).__express);
-app.set('view engine', 'pug');
-app.set('views', './src/views');
+app.use(express.json());
 
+app.use(logging.logRequest);
 app.use('/users', usersRouter);
 
 app.listen(port, () => {
