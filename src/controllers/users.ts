@@ -6,14 +6,18 @@ const getMany = async (req: Request, res: Response) => {
     res.json({ users });
 };
 
-const create = async (req: Request, res: Response) => {
-    const user = await prisma.user.create({
-        data: {
-            email: req.body.email,
-            username: req.body.username,
-        },
-    });
-    res.status(201).json({ user });
+const create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await prisma.user.create({
+            data: {
+                email: req.body.email,
+                username: req.body.username,
+            },
+        });
+        res.status(201).json({ user });
+    } catch (err) {
+        next(err);
+    }
 };
 
 const get = async (req: Request, res: Response) => {
