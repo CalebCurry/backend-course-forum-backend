@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { betterAjvErrors } from '@apideck/better-ajv-errors';
+import xss from 'xss';
 
 const ajv = new Ajv();
 addFormats(ajv);
@@ -12,7 +13,7 @@ const schema = {
         username: {
             type: 'string',
             minLength: 5,
-            maxLength: 30,
+            maxLength: 300,
         },
         email: {
             type: 'string',
