@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(xss);
+//app.use(xss);
 app.use(logging.logRequest);
 app.use('/users', usersRouter);
 app.use(errors.errorHandler);
