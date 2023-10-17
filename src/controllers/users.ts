@@ -34,7 +34,7 @@ const get = async (req: Request, res: Response) => {
         return;
     }
 
-    res.send(user.username);
+    res.send({ user });
 };
 
 export default { getMany, create, get };

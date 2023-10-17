@@ -1,23 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, validationResult } from 'express-validator';
+import z from 'zod';
 
-const validate = (req: Request, res: Response, next: NextFunction) => {
-    const result = validationResult(req);
+const UserSchema = z.object({
+    username: z
+        .string()
+        .min(5, 'at least 5 characters')
+        .max(50, 'at most 50 characters'),
+    email: z.string().email(),
+});
 
-    if (!result.isEmpty()) {
-        return res.status(400).json({ errors: result.array() });
+type User = z.infer<typeof UserSchema>;
+
+const validateAccount = (
+    req: Request<unknown, unknown, User>,
+    res: Response,
+    next: NextFunction
+) => {
+    const validation = UserSchema.safeParse(req.body);
+
+    if (!validation.success) {
+        return res.status(400).json({ errors: validation.error.issues });
     }
-
     next();
 };
-
-const validateAccount = [
-    body('email').isEmail().withMessage('Invalid email').escape(),
-    body('username')
-        .isLength({ min: 5, max: 50 })
-        .withMessage('username must be 5-50 characters')
-        .escape(),
-    validate,
-];
 
 export default { validateAccount };
