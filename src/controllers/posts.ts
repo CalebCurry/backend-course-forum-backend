@@ -156,6 +156,14 @@ export const getReplies: RequestHandler = async (req, res, next) => {
 
     res.json({ replies: post.replies });
 };
-export const createReply: RequestHandler = (req, res) => {
-    res.json({ message: 'hit' });
+export const createReply: RequestHandler = async (req, res) => {
+    const postId = parseInt(req.body.id);
+    const body = req.body;
+    body.userId = req.user.userId;
+
+    const reply = await prisma.reply.create({
+        data: body,
+    });
+
+    res.json({ reply });
 };
