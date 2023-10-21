@@ -5,6 +5,7 @@ import express, {
     Response,
 } from 'express';
 import prisma from '../prisma.js';
+import bcrypt from 'bcrypt';
 
 export const getUsers: RequestHandler = async (req, res) => {
     const users = await prisma.user.findMany();
@@ -12,9 +13,17 @@ export const getUsers: RequestHandler = async (req, res) => {
 };
 
 export const createUser: RequestHandler = async (req, res, next) => {
-    const user = await prisma.user.create({
-        data: req.body,
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+    console.log(hashedPassword);
+
+    const userDb = await prisma.user.create({
+        data: { ...req.body, password: hashedPassword },
     });
+
+    const { password, ...user } = userDb;
+
     res.status(201).json({ user });
 };
 

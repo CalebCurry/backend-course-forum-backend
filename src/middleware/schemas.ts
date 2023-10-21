@@ -12,7 +12,8 @@ export const User = z.object({
         .string()
         .min(5, 'at least, 5 chars')
         .max(50, 'at most 50 chars'),
-    verified: z.boolean(),
+    password: z.string(),
+    verified: z.boolean().optional(),
     notificationSettings: z.nativeEnum(NotificationSettings).array().optional(),
     posts: z.array(postLazy).optional(),
     postsLiked: z.array(postLazy).optional(),
