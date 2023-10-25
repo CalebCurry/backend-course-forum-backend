@@ -1,5 +1,5 @@
 import z from 'zod';
-import { NotificationSettings } from '@prisma/client';
+import { NotificationSettings, Roles } from '@prisma/client';
 
 const userLazy: z.ZodLazy<any> = z.lazy(() => User);
 const postLazy: z.ZodLazy<any> = z.lazy(() => Post);
@@ -12,6 +12,7 @@ export const User = z.object({
     username: z.string().min(5, 'at least 5 chars').max(50, 'at most 50 chars'),
     password: z.string(),
     verified: z.boolean().optional(),
+    Roles: z.nativeEnum(Roles).array().optional(),
     notificationSettings: z.nativeEnum(NotificationSettings).array().optional(),
     posts: z.array(postLazy).optional(),
     postsLiked: z.array(postLazy).optional(),
