@@ -8,10 +8,8 @@ const replyLazy: z.ZodLazy<any> = z.lazy(() => Reply);
 export const User = z.object({
     id: z.number().int().nonnegative().optional(),
     email: z.string().email(),
-    username: z
-        .string()
-        .min(5, 'at least, 5 chars')
-        .max(50, 'at most 50 chars'),
+    name: z.string().max(50, 'at most 50 chars'),
+    username: z.string().min(5, 'at least 5 chars').max(50, 'at most 50 chars'),
     password: z.string(),
     verified: z.boolean().optional(),
     notificationSettings: z.nativeEnum(NotificationSettings).array().optional(),
@@ -19,6 +17,33 @@ export const User = z.object({
     postsLiked: z.array(postLazy).optional(),
     postReplies: z.array(replyLazy).optional(),
 });
+
+function containsNumber(value: string): boolean {
+    return /\d/.test(value);
+}
+
+function containsSpecial(value: string): boolean {
+    return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+}
+
+export const Account = User.pick({
+    name: true,
+    username: true,
+    email: true,
+})
+    .extend({
+        password: z
+            .string()
+            .min(8, 'at least 8 chars')
+            .refine(containsNumber, 'Must contain atleast 1 number')
+            .refine(containsSpecial, 'must contain a special character'),
+    })
+    .strict();
+
+export const Login = User.pick({
+    username: true,
+    password: true,
+}).strict();
 
 export const UserUpdate = User.partial();
 
