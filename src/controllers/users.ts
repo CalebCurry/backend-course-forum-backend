@@ -27,7 +27,7 @@ export const getUser: RequestHandler = async (req, res, next) => {
 
 export const updateUser: RequestHandler = async (req, res) => {
     const userId = req.user.id;
-    console.log('from updateUser', req.user);
+    delete req.body.roles;
     const user = await prisma.user.update({
         where: { id: userId },
         data: req.body,
