@@ -57,8 +57,6 @@ export const createLike: RequestHandler = async (req, res) => {
     const postId = Number.parseInt(req.params.id);
     const userId = req.user.id;
 
-    console.log(userId);
-
     const post = await prisma.post.update({
         where: { id: postId },
         data: {
@@ -100,8 +98,6 @@ export const deleteLike: RequestHandler = async (req, res) => {
 export const createFollow: RequestHandler = async (req, res) => {
     const postId = Number.parseInt(req.params.id);
     const userId = req.user.id;
-
-    console.log(userId);
 
     const post = await prisma.post.update({
         where: { id: postId },

@@ -49,8 +49,6 @@ export const register: RequestHandler = async (req, res, next) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    console.log(hashedPassword);
-
     const user = await prisma.user.create({
         data: {
             ...req.body,
