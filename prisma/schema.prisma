@@ -13,6 +13,7 @@ model User {
   username String  @unique
   name     String
   verified Boolean @default(true)
+  email2fa Boolean @default(false)
   roles    Roles[]
 
   notificationSettings NotificationSettings[]
