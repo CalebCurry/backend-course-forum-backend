@@ -14,7 +14,7 @@ const auth: RequestHandler = (req, res, next) => {
 
         next();
     } catch (err) {
-        res.sendStatus(401).json();
+        return res.status(401).json({ error: 'Please authenticate' });
     }
 };
 
