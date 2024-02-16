@@ -22,7 +22,10 @@ app.get('/', (req, res) => {
 
 app.use('/v1/auth', authRouter);
 
-app.use(authenticated);
+//defaulting to no auth to check db connection easily
+//visit /v1/posts for example
+//uncomment to enable auth
+//app.use(authenticated);
 
 app.use('/v1/users', usersRouter);
 app.use('/v1/posts', postsRouter);
